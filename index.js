@@ -39,7 +39,24 @@ let interval;
 let access_obj; // tokens here
 
 
+// Check if the file exists in the current directory.
+fs.access(file, constants.F_OK, (err) => {
+    if (!err)
+    {
+        let file_content=  fs.readFile(file, 'utf8', (err, data)=>{
+            if (!err && data.length > 0)
+            {
+                let json = JSON.parse(data);
+                access_obj = json;
+                renew_token();
 
+                interval = setInterval(()=>{ renew_token(); },                     
+                    (access_obj.expires_in) * 1000 );
+            }
+        });
+        
+    }
+  });
 
 
 // юзер попадает сюда когда подтверждает access
