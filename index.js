@@ -6,6 +6,13 @@ const app = express();
 /*
       SETTINGS
 */
+
+const USER = { //user
+      "code": '',
+      "userinfo": ''
+};
+
+
 let file          = './access.json'; // file with token
 const port        = process.env.PORT;// 443 or 80
 let clientid      = '7d9bde70a7784095a85e23f80a094ead';
@@ -38,7 +45,9 @@ let scopes        = 'ugc-image-upload '+  //scopes
 let interval;
 let access_obj; // tokens here
 
-
+/*
+      STARTUP TASKS
+*/
 // Check if the file exists in the current directory.
 fs.access(file, constants.F_OK, (err) => {
     if (!err)
@@ -58,6 +67,15 @@ fs.access(file, constants.F_OK, (err) => {
     }
   });
 
+/*
+      GET CURENT TOKEN
+*/
+app.get("/gettoken", (request, response) => {
+   if (request.query.code === USER.code)
+    {
+      response.send(access_obj.access_token);
+    } 
+});
 
 // юзер попадает сюда когда подтверждает access
 app.get("/callback", (request, response) => {
@@ -66,7 +84,9 @@ app.get("/callback", (request, response) => {
     
 });
 
-// то что получает пользователь 
+/*
+      GIVE IT TO USER
+*/
 app.get("/reg", (request, response) => { 
   
  response.redirect('https://accounts.spotify.com/authorize?client_id='+clientid+'&response_type=code&redirect_uri='+encodeURIComponent(callbackurl)+'&scope='+encodeURIComponent(scopes)+'&state=34fFs29kd09');
