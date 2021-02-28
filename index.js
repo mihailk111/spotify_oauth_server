@@ -65,6 +65,11 @@ fs.access(file, constants.F_OK, (err) => {
         });
         
     }
+    else
+    {
+        let file = fs.open(file, 'w');
+        fs.close(file);
+    }
   });
 
 /*
